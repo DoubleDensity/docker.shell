@@ -1,10 +1,7 @@
-# THIS SPECIFIC FILE IS DISTRIBUTED UNDER THE UNLICENSE: http://unlicense.org.
-# 
-# YOU CAN FREELY USE THIS CODE EXAMPLE TO KICKSTART A PROJECT OF YOUR OWN.
-# FEEL FREE TO REPLACE OR REMOVE THIS HEADER.
 version: '3.4'
 services:
-  main:
+
+  alpine:
     # Makefile fills PROJECT_NAME to current directory name.
     # add UID to allow multiple users run this in parallel
     container_name: ${PROJECT_NAME}_${HOST_UID:-4000}
@@ -19,7 +16,7 @@ services:
       context: .
       # Build for current user.
       target: user
-      dockerfile: Dockerfile
+      dockerfile: alpine
       # These variables are passed to Dockerfile.
       args:
         - HOST_UID=${HOST_UID:-4000}
@@ -28,4 +25,5 @@ services:
     command: ["tail", "-f", "/dev/null"]
     # Copy current (git-) project into container.
     volumes:
-      - ${PWD:-.}:/home/${HOST_USER}/${PROJECT_NAME}
+      - ${HOME:-.}:/home/${HOST_USER}/
+

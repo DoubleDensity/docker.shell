@@ -38,11 +38,8 @@ fi
 
 if [ ! -d $HOME/docker.shell ]; then
     git clone https://github.com/randymcmillan/docker.shell $HOME/docker.shell
+    cd $HOME/docker.shell && make link
 fi
-
-cd $HOME/docker.shell
-git reset --hard HEAD~1 && git pull && make link
-
 }
 install
 

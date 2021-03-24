@@ -22,8 +22,8 @@ ifeq ($(user),)
 HOST_USER := root
 HOST_UID  := 0
 # USER retrieved from env, UID from shell.
-#HOST_USER ?= $(strip $(if $(USER),$(USER),nodummy))
-#HOST_UID  ?=  $(strip $(if $(shell id -u),$(shell id -u),4000))
+HOST_USER ?= $(strip $(if $(USER),$(USER),nodummy))
+HOST_UID  ?=  $(strip $(if $(shell id -u),$(shell id -u),4000))
 else
 # We force root
 HOST_USER := root

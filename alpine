@@ -2,7 +2,7 @@ FROM alpine as base
 
 RUN apk update \
     && apk add ${VERBOSE} ${NO_CACHE} \
-        alpine-sdk sudo bash-completion git vim shadow
+        alpine-sdk sudo bash-completion git vim shadow openssh-client
 
 FROM scratch as user
 COPY --from=base . .
@@ -28,3 +28,8 @@ RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
 USER ${HOST_USER}
 WORKDIR /home/${HOST_USER}
+
+RUN mkdir -p /home/${HOST_USER}/.ssh &&  chmod 700 /home/${HOST_USER}/.ssh
+#COPY ${HOME}/.ssh/id_rsa /home/${HOST_USER}/.ssh/id_rsa
+#RUN chmod 600 /home/${HOST_USER}/.ssh/id_rsa
+

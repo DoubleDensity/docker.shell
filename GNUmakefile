@@ -116,7 +116,7 @@ report:
 	@echo '        - CMD_ARGUMENTS=${CMD_ARGUMENTS}'
 	@echo ''
 
-
+.PHONY: alpine
 alpine:
 ifeq ($(CMD_ARGUMENTS),)
 	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm ${SERVICE_TARGET} sh
@@ -124,9 +124,11 @@ else
 	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm $(SERVICE_TARGET) sh -c "$(CMD_ARGUMENTS)"
 endif
 
+.PHONY:shell
 shell: alpine
 
 # Regular Makefile part for buildpypi itself
+.PHONY: help
 help:
 	@echo ''
 	@echo 'Usage: make [TARGET] [EXTRA_ARGUMENTS]'

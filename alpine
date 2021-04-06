@@ -1,4 +1,5 @@
-FROM alpine as base
+ARG ALPINE_VERSION=${ALPINE_VERSION}
+FROM alpine:${ALPINE_VERSION} as base
 
 RUN apk update \
     && apk add ${VERBOSE} ${NO_CACHE} \

@@ -18,24 +18,53 @@ PROJECT_NAME = $(notdir $(PWD))
 SERVICE_TARGET := alpine
 
 ifeq ($(user),)
-# We force root
-HOST_USER := root
-HOST_UID  := 0
 # USER retrieved from env, UID from shell.
 HOST_USER ?= $(strip $(if $(USER),$(USER),nodummy))
 HOST_UID  ?=  $(strip $(if $(shell id -u),$(shell id -u),4000))
 else
-# We force root
-HOST_USER := root
-HOST_UID  := 0
 # allow override by adding user= and/ or uid=  (lowercase!).
 # uid= defaults to 0 if user= set (i.e. root).
-#HOST_USER = $(user)
-#HOST_UID = $(strip $(if $(uid),$(uid),0))
+HOST_USER = $(user)
+HOST_UID = $(strip $(if $(uid),$(uid),0))
 endif
 
+ifeq ($(alpine),)
+ALPINE_VERSION := 3.11.10
+else
+ALPINE_VERSION := $(alpine)
+endif
+export ALPINE_VERSION
+
+ifeq ($(no-cache),true)
+NO_CACHE := --no-cache
+else
+NO_CACHE :=	
+endif
+export NO_CACHE
+
+ifeq ($(verbose),true)
+VERBOSE := --verbose
+else
+VERBOSE :=	
+endif
+export VERBOSE
+
+ifneq ($(passwd),)
+PASSWORD := $(passwd)
+else
+PASSWORD := changeme
+endif
+export PASSWORD
+
+
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-CMD_ARGUMENTS ?= $(cmd)
+
+ifeq ($(cmd),)
+CMD_ARGUMENTS := 	
+else
+CMD_ARGUMENTS := $(cmd)
+endif
+export CMD_ARGUMENTS
 
 # export such that its passed to shell functions for Docker to pick up.
 export PROJECT_NAME
@@ -48,11 +77,51 @@ export HOST_UID
 # suppress makes own output
 #.SILENT:
 
+.PHONY: report
+report:
+	@echo ''
+	@echo '	[ARGUMENTS]	'
+	@echo '      args:'
+	@echo '        - PWD=${PWD}'
+	@echo '        - Makefile=${Makefile}'
+	@echo '        - THIS_FILE=${THIS_FILE}'
+	@echo '        - TIME=${TIME}'
+	@echo '        - HOST_USER=${HOST_USER}'
+	@echo '        - HOST_UID=${HOST_UID}'
+	@echo '        - SERVICE_TARGET=${SERVICE_TARGET}'
+	@echo '        - ALPINE_VERSION=${ALPINE_VERSION}'
+	@echo '        - WHISPER_VERSION=${WHISPER_VERSION}'
+	@echo '        - CARBON_VERSION=${CARBON_VERSION}'
+	@echo '        - GRAPHITE_VERSION=${GRAPHITE_VERSION}'
+	@echo '        - STATSD_VERSION=${STATSD_VERSION}'
+	@echo '        - GRAFANA_VERSION=${GRAFANA_VERSION}'
+	@echo '        - PROJECT_NAME=${PROJECT_NAME}'
+	@echo '        - GIT_USER_NAME=${GIT_USER_NAME}'
+	@echo '        - GIT_USER_EMAIL=${GIT_USER_EMAIL}'
+	@echo '        - GIT_SERVER=${GIT_SERVER}'
+	@echo '        - GIT_PROFILE=${GIT_PROFILE}'
+	@echo '        - GIT_REPO_ORIGIN=${GIT_REPO_ORIGIN}'
+	@echo '        - GIT_REPO_NAME=${GIT_REPO_NAME}'
+	@echo '        - GIT_REPO_PATH=${GIT_REPO_PATH}'
+	@echo '        - DOCKERFILE=${DOCKERFILE}'
+	@echo '        - DOCKERFILE_BODY=${DOCKERFILE_BODY}'
+	@echo '        - DOCKERFILE_PATH=${DOCKERFILE_PATH}'
+	@echo '        - BITCOIN_CONF=${BITCOIN_CONF}'
+	@echo '        - BITCOIN_DATA=${BITCOIN_DATA}'
+	@echo '        - STATOSHI_DATA=${STATOSHI_DATA}'
+	@echo '        - NO_CACHE=${NO_CACHE}'
+	@echo '        - VERBOSE=${VERBOSE}'
+	@echo '        - PUBLIC_PORT=${PUBLIC_PORT}'
+	@echo '        - PASSWORD=${PASSWORD}'
+	@echo '        - CMD_ARGUMENTS=${CMD_ARGUMENTS}'
+	@echo ''
+
+
 alpine:
 ifeq ($(CMD_ARGUMENTS),)
-	docker-compose -p $(PROJECT_NAME)_$(HOST_UID) run --rm ${SERVICE_TARGET} sh
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm ${SERVICE_TARGET} sh
 else
-	docker-compose -p $(PROJECT_NAME)_$(HOST_UID) run --rm $(SERVICE_TARGET) sh -c "$(CMD_ARGUMENTS)"
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm $(SERVICE_TARGET) sh -c "$(CMD_ARGUMENTS)"
 endif
 
 shell: alpine
@@ -79,7 +148,7 @@ alpine-build:
 
 alpine-rebuild:
 	# force a rebuild by passing --no-cache
-	docker-compose build --no-cache ${SERVICE_TARGET}
+	docker-compose build $(NO_CACHE) $(VERBOSE) ${SERVICE_TARGET}
 
 alpine-test:
 	docker-compose -p $(PROJECT_NAME)_$(HOST_UID) run --rm ${SERVICE_TARGET} sh -c '\

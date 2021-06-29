@@ -9,9 +9,34 @@
 # If you see pwd_unknown showing up, this is why. Re-calibrate your system.
 PWD ?= pwd_unknown
 
+TIME := $(shell date +%s)
+export TIME
+#GIT CONFIG
+GIT_USER_NAME							:= $(shell git config user.name)
+export GIT_USER_NAME
+GIT_USER_EMAIL							:= $(shell git config user.email)
+export GIT_USER_EMAIL
+GIT_SERVER								:= https://github.com
+export GIT_SERVER
+GIT_PROFILE								:= $(shell git config user.name) #may need to hard code for forks
+export GIT_PROFILE
+GIT_BRANCH								:= $(shell git rev-parse --abbrev-ref HEAD)
+export GIT_BRANCH
+GIT_HASH								:= $(shell git rev-parse --short HEAD)
+export GIT_HASH
+GIT_PREVIOUS_HASH						:= $(shell git rev-parse --short master@{1})
+export GIT_PREVIOUS_HASH
+GIT_REPO_ORIGIN							:= $(shell git remote get-url origin)
+export GIT_REPO_ORIGIN
+GIT_REPO_NAME							:= $(PROJECT_NAME)
+export GIT_REPO_NAME
+GIT_REPO_PATH							:= $(HOME)/$(GIT_REPO_NAME)
+export GIT_REPO_PATH
+
 # PROJECT_NAME defaults to name of the current directory.
 # should not to be changed if you follow GitOps operating procedures.
 PROJECT_NAME = $(notdir $(PWD))
+export PROJECT_NAME
 
 # Note. If you change this, you also need to update docker-compose.yml.
 # only useful in a setting with multiple services/ makefiles.
@@ -27,6 +52,11 @@ else
 HOST_USER = $(user)
 HOST_UID = $(strip $(if $(uid),$(uid),0))
 endif
+ifeq ($(user),runner)
+PWD := /home/runner/work/$(GIT_PROFILE)/$(GIT_REPO_NAME)
+endif
+export HOST_USER
+export HOST_UID
 
 ifeq ($(alpine),)
 ALPINE_VERSION := 3.11.10
@@ -66,10 +96,10 @@ CMD_ARGUMENTS := $(cmd)
 endif
 export CMD_ARGUMENTS
 
-# export such that its passed to shell functions for Docker to pick up.
 export PROJECT_NAME
-export HOST_USER
-export HOST_UID
+
+DOCKER_MAC:=$(shell find /Applications -name Docker.app)
+export DOCKER_MAC
 
 # all our targets are phony (no files to check).
 .PHONY: alpine shell help alpine-build alpine-rebuild build rebuild alpine-test service login  clean
@@ -115,6 +145,10 @@ report:
 	@echo '        - PASSWORD=${PASSWORD}'
 	@echo '        - CMD_ARGUMENTS=${CMD_ARGUMENTS}'
 	@echo ''
+
+.PHONY: start-docker-mac
+start-docker-mac:
+	bash -c "${DOCKER_MAC}/Contents/MacOS/./Docker"
 
 .PHONY: alpine
 alpine:

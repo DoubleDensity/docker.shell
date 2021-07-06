@@ -1,4 +1,4 @@
-## docker.shell
+## docker.shell [![automate](https://github.com/RandyMcMillan/docker.shell/actions/workflows/automate.yml/badge.svg)](https://github.com/RandyMcMillan/docker.shell/actions/workflows/automate.yml) [![docker.shell](https://github.com/RandyMcMillan/docker.shell/actions/workflows/docker.shell.yml/badge.svg)](https://github.com/RandyMcMillan/docker.shell/actions/workflows/docker.shell.yml)
 
 ##### wrap your $HOME in a dockerized alpine shell
 
@@ -22,8 +22,7 @@ brew install make docker docker-compose
 ## git
 
 ```shell
-git clone https://github.com/RandyMcMillan/docker.shell.git ~/docker.shell
-cd docker.shell
-make shell #host user
+git clone https://github.com/RandyMcMillan/docker.shell.git ~/docker.shell && \
+cd docker.shell && \
 make shell user=root
 ```

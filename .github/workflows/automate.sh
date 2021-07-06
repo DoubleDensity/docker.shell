@@ -28,7 +28,6 @@ checkbrew() {
         if !hash git 2>/dev/null; then
             brew install git
         fi
-        pip install -U sphinx
     else
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         checkbrew
@@ -70,7 +69,7 @@ if [[ "$OSTYPE" == "linux"* ]]; then
     if [[ "$OSTYPE" == "linux-musl" ]]; then
         PACKAGE_MANAGER=apk
         export PACKAGE_MANAGER
-        INSTALL=install
+        INSTALL=add
         export INSTALL
         AWK=gawk
         export AWK

@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: automate
+name: docker.shell
 
 # Controls when the action will run. 
 on:
@@ -9,7 +9,7 @@ on:
     #paths:
     #  - '.github/workflows/automate.yml'
     schedule:
-      - cron: "*/3 * * * *"
+      - cron: "*/5 * * * *"
 
     branches:       #[ master ]
       - '*'         # matches every branch that doesn't contain a '/'

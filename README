@@ -1,9 +1,0 @@
-# docker.shell
-
-#### wrap your $HOME in an alpine shell
-
-##### Quick install
-
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/randymcmillan/docker.shell/master/install.sh)"
-```

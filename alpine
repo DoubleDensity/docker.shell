@@ -18,13 +18,10 @@ RUN [ "${HOST_USER}" == "root" ] || \
 RUN for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video netdev games users; do addgroup $u $g; done;done
 
 ARG PASSWORD=${PASSWORD}
-#REF: https://stackoverflow.com/questions/49955097/how-do-i-add-a-user-when-im-using-alpine-as-a-base-image
-#REF: https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user
 RUN echo ${HOST_USER}:${PASSWORD} | chpasswd
 RUN echo root:${PASSWORD} | chpasswd
 RUN echo "${HOST_USER} ALL=(ALL) ALL" >> /etc/sudoers
 RUN echo "root ALL=(ALL) ALL" >> /etc/sudoers
-#REF https://github.com/sudo-project/sudo/issues/42#issuecomment-659253293
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
 
 USER ${HOST_USER}

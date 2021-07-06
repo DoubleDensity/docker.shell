@@ -1,11 +1,3 @@
-# --------------------------------------------------------------------
-# Copyright (c) 2019 LINKIT, The Netherlands. All Rights Reserved.
-# Author(s): Anthony Potappel
-# 
-# This software may be modified and distributed under the terms of the
-# MIT license. See the LICENSE file for details.
-# --------------------------------------------------------------------
-
 # If you see pwd_unknown showing up, this is why. Re-calibrate your system.
 PWD ?= pwd_unknown
 
@@ -93,11 +85,6 @@ report:
 	@echo '        - HOST_UID=${HOST_UID}'
 	@echo '        - SERVICE_TARGET=${SERVICE_TARGET}'
 	@echo '        - ALPINE_VERSION=${ALPINE_VERSION}'
-	@echo '        - WHISPER_VERSION=${WHISPER_VERSION}'
-	@echo '        - CARBON_VERSION=${CARBON_VERSION}'
-	@echo '        - GRAPHITE_VERSION=${GRAPHITE_VERSION}'
-	@echo '        - STATSD_VERSION=${STATSD_VERSION}'
-	@echo '        - GRAFANA_VERSION=${GRAFANA_VERSION}'
 	@echo '        - PROJECT_NAME=${PROJECT_NAME}'
 	@echo '        - GIT_USER_NAME=${GIT_USER_NAME}'
 	@echo '        - GIT_USER_EMAIL=${GIT_USER_EMAIL}'
@@ -109,9 +96,6 @@ report:
 	@echo '        - DOCKERFILE=${DOCKERFILE}'
 	@echo '        - DOCKERFILE_BODY=${DOCKERFILE_BODY}'
 	@echo '        - DOCKERFILE_PATH=${DOCKERFILE_PATH}'
-	@echo '        - BITCOIN_CONF=${BITCOIN_CONF}'
-	@echo '        - BITCOIN_DATA=${BITCOIN_DATA}'
-	@echo '        - STATOSHI_DATA=${STATOSHI_DATA}'
 	@echo '        - NO_CACHE=${NO_CACHE}'
 	@echo '        - VERBOSE=${VERBOSE}'
 	@echo '        - PUBLIC_PORT=${PUBLIC_PORT}'

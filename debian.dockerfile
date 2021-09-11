@@ -39,4 +39,3 @@ RUN  chown -R "${HOST_UID}:${HOST_UID}" /home/${HOST_USER}/.ssh
 RUN chmod 600 /home/${HOST_USER}/.ssh/id_rsa
 
 WORKDIR /home/${HOST_USER}
-CMD ["bash"]

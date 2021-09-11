@@ -7,8 +7,11 @@ PROJECT_NAME = $(notdir $(PWD))
 
 # Note. If you change this, you also need to update docker-compose.yml.
 # only useful in a setting with multiple services/ makefiles.
+ifeq ($(target),alpine)
 SERVICE_TARGET := alpine
-
+else
+SERVICE_TARGET := debian
+endif
 ifeq ($(user),)
 # USER retrieved from env, UID from shell.
 HOST_USER ?= $(strip $(if $(USER),$(USER),nodummy))

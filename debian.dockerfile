@@ -1,4 +1,5 @@
-FROM debian:stretch-slim as user
+ARG DEBIAN_VERSION=${DEBIAN_VERSION}
+FROM debian:${DEBIAN_VERSION} as user
 RUN apt-get -y upgrade
 RUN apt-get -y update
 #RUN export DEBIAN_FRONTEND=noninteractive && apt-get install build-essential libssl-dev

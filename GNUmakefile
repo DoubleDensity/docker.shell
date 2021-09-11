@@ -30,6 +30,13 @@ ALPINE_VERSION := $(alpine)
 endif
 export ALPINE_VERSION
 
+ifeq ($(debian),)
+DEBIAN_VERSION := bookworm
+else
+DEBIAN_VERSION := $(debian)
+endif
+export DEBIAN_VERSION
+
 ifeq ($(no-cache),true)
 NO_CACHE := --no-cache
 else
@@ -70,7 +77,7 @@ DOCKER_MAC:=$(shell find /Applications -name Docker.app)
 export DOCKER_MAC
 
 # all our targets are phony (no files to check).
-.PHONY: alpine shell help alpine-build alpine-rebuild build rebuild alpine-test service login  clean
+.PHONY: debian alpine shell help alpine-build alpine-rebuild build rebuild alpine-test service login  clean
 
 # suppress makes own output
 #.SILENT:
@@ -88,6 +95,7 @@ report:
 	@echo '        - HOST_UID=${HOST_UID}'
 	@echo '        - SERVICE_TARGET=${SERVICE_TARGET}'
 	@echo '        - ALPINE_VERSION=${ALPINE_VERSION}'
+	@echo '        - DEBIAN_VERSION=${DEBIAN_VERSION}'
 	@echo '        - PROJECT_NAME=${PROJECT_NAME}'
 	@echo '        - GIT_USER_NAME=${GIT_USER_NAME}'
 	@echo '        - GIT_USER_EMAIL=${GIT_USER_EMAIL}'
@@ -110,16 +118,29 @@ report:
 start-docker-mac:
 	bash -c "${DOCKER_MAC}/Contents/MacOS/./Docker"
 
-.PHONY: alpine
-alpine:
+.PHONY: shell
+shell:
 ifeq ($(CMD_ARGUMENTS),)
 	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm ${SERVICE_TARGET} sh
 else
 	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm $(SERVICE_TARGET) sh -c "$(CMD_ARGUMENTS)"
 endif
 
-.PHONY:shell
-shell: alpine
+.PHONY: alpine
+alpine:
+ifeq ($(CMD_ARGUMENTS),)
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm alpine sh
+else
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm alpine sh -c "$(CMD_ARGUMENTS)"
+endif
+
+.PHONY: debian
+debian:
+ifeq ($(CMD_ARGUMENTS),)
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm debian sh
+else
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm debian sh -c "$(CMD_ARGUMENTS)"
+endif
 
 # Regular Makefile part for buildpypi itself
 .PHONY: help

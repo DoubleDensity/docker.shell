@@ -30,7 +30,7 @@ services:
     # Copy current (git-) project into container.
     volumes:
       - ${HOME:-.}:/home/${HOST_USER}
-      - ${PWD:-.}:/home/${HOST_USER}
+      - ${PWD:-.}:/home/${HOST_USER}/docker.shell
 
   debian:
     # Makefile fills PROJECT_NAME to current directory name.
@@ -61,4 +61,4 @@ services:
     # Copy current (git-) project into container.
     volumes:
       - ${HOME:-.}:/home/${HOST_USER}
-      - ${PWD:-.}:/home/${HOST_USER}
+      - ${PWD:-.}:/home/${HOST_USER}/docker.shell

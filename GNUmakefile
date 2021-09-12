@@ -1,17 +1,21 @@
 # If you see pwd_unknown showing up, this is why. Re-calibrate your system.
 PWD ?= pwd_unknown
 
+TIME									:= $(shell date +%s)
+export TIME
 # PROJECT_NAME defaults to name of the current directory.
 # should not to be changed if you follow GitOps operating procedures.
 PROJECT_NAME = $(notdir $(PWD))
 
 # Note. If you change this, you also need to update docker-compose.yml.
 # only useful in a setting with multiple services/ makefiles.
-ifeq ($(target),alpine)
-SERVICE_TARGET := alpine
+ifneq ($(target),)
+SERVICE_TARGET := $(target)
 else
 SERVICE_TARGET := debian
 endif
+export SERVICE_TARGET
+
 ifeq ($(user),)
 # USER retrieved from env, UID from shell.
 HOST_USER ?= $(strip $(if $(USER),$(USER),nodummy))
@@ -142,16 +146,36 @@ else
 	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm debian sh -c "$(CMD_ARGUMENTS)"
 endif
 
+.PHONY: centos
+centos:
+ifeq ($(CMD_ARGUMENTS),)
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm centos sh
+else
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm centos sh -c "$(CMD_ARGUMENTS)"
+endif
+
+.PHONY: centos7
+centos7:
+ifeq ($(CMD_ARGUMENTS),)
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm centos7 sh
+else
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm centos7 sh -c "$(CMD_ARGUMENTS)"
+endif
+
 # Regular Makefile part for buildpypi itself
 .PHONY: help
 help:
 	@echo ''
 	@echo 'Usage: make [TARGET] [EXTRA_ARGUMENTS]'
 	@echo 'Targets:'
-	@echo '  service   	run as service --container-- for current user: $(HOST_USER)(uid=$(HOST_UID))'
-	@echo '  login   	run as service and login --container-- for current user: $(HOST_USER)(uid=$(HOST_UID))'
-	@echo '  clean    	remove docker --image-- for current user: $(HOST_USER)(uid=$(HOST_UID))'
 	@echo '  shell    	run docker --container-- for current user: $(HOST_USER)(uid=$(HOST_UID))'
+	@echo ''
+	@echo ''
+	@echo ''
+	@echo '  make centos user=root'
+	@echo '  make centos7 user=root'
+	@echo ''
+	@echo ''
 	@echo ''
 	@echo 'Extra arguments:'
 	@echo 'cmd=:	make cmd="whoami"'

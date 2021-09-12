@@ -162,6 +162,22 @@ else
 	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm centos7 sh -c "$(CMD_ARGUMENTS)"
 endif
 
+.PHONY: fedora33
+fedora33:
+ifeq ($(CMD_ARGUMENTS),)
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm fedora33 sh
+else
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm fedora33 sh -c "$(CMD_ARGUMENTS)"
+endif
+
+.PHONY: fedora34
+fedora34:
+ifeq ($(CMD_ARGUMENTS),)
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm fedora34 sh
+else
+	docker-compose $(VERBOSE) -p $(PROJECT_NAME)_$(HOST_UID) run --rm fedora34 sh -c "$(CMD_ARGUMENTS)"
+endif
+
 # Regular Makefile part for buildpypi itself
 .PHONY: help
 help:

@@ -26,3 +26,24 @@ git clone https://github.com/RandyMcMillan/docker.shell.git ~/docker.shell && \
 cd docker.shell && \
 make shell user=root
 ```
+
+## centos
+
+```shell
+make centos user=root
+```
+## centos7
+
+```shell
+make centos7 user=root
+```
+## fedora33
+
+```shell
+make fedora33 user=root
+```
+## fedora34
+
+```shell
+make fedora34 user=root
+```

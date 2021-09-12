@@ -67,7 +67,7 @@ services:
     volumes:
       - ${HOME:-.}:/home/${HOST_USER}
 
-  fedora:
+  fedora33:
     container_name: ${PROJECT_NAME}_${HOST_UID:-4000}
     hostname: ${PROJECT_NAME}
     environment:
@@ -78,7 +78,29 @@ services:
     build:
       context: .
       target: user
-      dockerfile: fedora.dockerfile
+      dockerfile: fedora33.dockerfile
+      args:
+        - HOST_UID=${HOST_UID:-4000}
+        - HOST_USER=${HOST_USER:-nodummy}
+        - SSH_PRIVATE_KEY=${SSH_PRIVATE_KEY}
+        - ALPINE_VERSION=${ALPINE_VERSION}
+        - PASSWORD=${PASSWORD}
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ${HOME:-.}:/home/${HOST_USER}
+
+  fedora34:
+    container_name: ${PROJECT_NAME}_${HOST_UID:-4000}
+    hostname: ${PROJECT_NAME}
+    environment:
+      - UID=${HOST_UID:-4000}
+    user: ${HOST_USER:-nodummy}
+    image: ${PROJECT_NAME}:${HOST_USER:-nodummy}
+    privileged: true
+    build:
+      context: .
+      target: user
+      dockerfile: fedora34.dockerfile
       args:
         - HOST_UID=${HOST_UID:-4000}
         - HOST_USER=${HOST_USER:-nodummy}
